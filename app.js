@@ -13,5 +13,5 @@ app.use(express.static('./public'));
 todoController(app);
 
 //listen
-app.listen(3006);
+app.listen(3000);
 console.log("yoo we are online again");
