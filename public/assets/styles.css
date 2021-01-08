@@ -31,15 +31,19 @@ input[type="text"]{
 }
 
 button{
+    display: inline-block;
     padding: 20px;
-    width: 30%;
-    float: left;
+    width: 25%;
+    
+    
+    left:350px;
     background: #23282e;
     border: 0;
     box-sizing: border-box;
     color: #fff;
     cursor: pointer;
     font-size: 20px;
+    
 }
 
 ul{
@@ -64,7 +68,7 @@ li:hover{
 }
 
 h1{
-    background: url(/logo.png) no-repeat center;
+    background: url(/assets/logo.png) no-repeat center;
     margin-bottom: 0;
     text-indent: -10000px;
 }

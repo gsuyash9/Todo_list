@@ -1,20 +1,99 @@
+var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
-var data=[{item:"get milk"},{item: "get haircut" },{item: "workout"}];
+require('dotenv').config();
+// var data = [{item: 'Task no.1'},{item: 'Task no.2'},{item: 'Task no.3'}];
 
-var urlencodedParser = bodyParser.urlencoded({ extended: false })
+mongoose.connect('mongodb+srv://myfirstdb:993565@cluster0.i5wkz.mongodb.net/test?retryWrites=true&w=majority',{useNewUrlParser: true});
 
-module.exports= function(app){
-    app.get('/todo',function(req,res){
+// Constructing Schema
+const todoSchema = new mongoose.Schema({
+
+    item: String
+
+});
+
+var Todo = mongoose.model('Todo', todoSchema);
+
+// var itemOne = Todo({item: "Buy me them flowers bro!"}).save((err) => {
+
+//     if(err)
+//         throw err;
+
+//     else
+//         console.log("Item saved!");
+
+// })
+
+var urlencodedParser = bodyParser.urlencoded({ extended: true });
+
+// console.log(data);
+
+module.exports = function(app){
+
+app.get('/todo', (req,res) => {
+
+    // Getting data from MongoDB
+
+    Todo.find({}, (err,data) => {
+
+        if(err)
+            throw err;
+        
         res.render('todo',{todos: data});
-    })
 
-    app.post('/todo',urlencodedParser,function(req,res){
-        data.push(res.body);
-        res.json({todo:data}); 
-    })
+    });
+    
+    // res.render('todo',{todos: data});
 
-    app.delete('/todo',(req,res)=>{
+});
 
-    })
+app.post('/todo',urlencodedParser,(req,res) => {
 
-}
+    // Adding to Database
+
+    var item = Todo(req.body).save((err,data) => {
+
+        if(err)
+            throw err;
+
+        res.render('todo', {todos: data});
+
+    });
+
+    // data.push(req.body);
+
+    //res.render('todo', {todos: data});
+
+});
+
+app.delete('/todo/:item',(req,res) => {
+
+    console.log('request received\n');
+
+    Todo.find({item: req.params.item.trim().replace( /\-/g," ")}).remove((err,data) => {
+
+        console.log('item removed\n');
+
+        if(err)
+            throw err;
+
+        res.render('todo', {todos: data});
+
+    });
+
+    // data = data.filter((todo) => {
+
+    //     // console.log(todo.item.replace(/ /g,"-"));
+
+    //     // console.log(req.params.item);
+
+    //     return todo.item.trim().replace(/ /g,"-") !== req.params.item;
+
+    // });
+
+    // console.log('Updated List!!')
+    // console.log(data);
+
+});
+
+};
